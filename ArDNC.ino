@@ -15,8 +15,14 @@ File myFile;
 #define VIOLET 0x5
 #define WHITE 0x7 
 
+#define BUFFSIZE 10
+
 void setup() {
-  Serial.begin(9600);
+  char a;
+  char chsetting[BUFFSIZE];
+  char chvalue[BUFFSIZE];
+  int i;
+  
   //Initialize LCD;
   lcd.begin(60,2);
   lcd.setBacklight(BLUE);
@@ -33,7 +39,45 @@ void setup() {
   myFile=SD.open("config.cfg");
   if(myFile){
     while (myFile.available()) {
-       //Read Config settings 
+      //Read Config settings
+      a=myFile.read();
+      switch(a){
+        case 32:
+          //space character
+          //ignore
+          break;
+        case 9:
+          //tab character
+          //ignore
+          break;
+        case 10:
+          //New line
+          setparam(chsetting,chvalue);
+          char chsetting[BUFFSIZE];
+          char chvalue[BUFFSIZE];
+          i=0;
+          break;
+        case 35:
+          //Hash character
+          //Comment, ignore until new line
+          i=3;
+          break;
+        case 61:
+          //Equals character
+          i=1;
+          break;
+        default:
+          if(i==0){
+            //strcat(chsetting,a);
+            if(strlen(chsetting)+1<BUFFSIZE){
+              chsetting[strlen(chsetting)]=a;
+            }
+          } else {
+            if(i==2){
+//              strcat(chvalue,a);
+            }
+          }
+      }
     }
     myFile.close();
   }else{
@@ -41,7 +85,7 @@ void setup() {
     lcd.setCursor(0,0);
     lcd.print("config.cfg not");
     lcd.setCursor(0,1);
-    lcd.print("found");
+    lcd.print("found.");
     lcd.setBacklight(RED);
     while(1);
   }
@@ -52,3 +96,21 @@ void loop() {
 
 }
 
+void setparam(char setting[10], char value[10]){
+  int a;
+  
+  switch(setting){
+    case "baud":
+      a=atoi(setting);
+      Serial.begin(a);
+      break;
+    default:
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Unknown setting:");
+      lcd.setCursor(0,1);
+      lcd.print(setting);
+      lcd.setBacklight(YELLOW);
+      delay(1000);
+  }
+}

@@ -79,7 +79,9 @@ void setup() {
             }
           } else {
             if(i==2){
-//              strcat(chvalue,a);
+              if(strlen(chvalue)+1<BUFFSIZE){
+                chvalue[strlen(chvalue)]=a;
+              }
             }
           }
       }

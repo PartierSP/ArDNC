@@ -17,6 +17,11 @@ File myFile;
 
 #define BUFFSIZE 10
 
+int baud;      //int value of baud rate
+int databit;   //16=5 bits, 32=6 bits, 64=7 bits, 128=8 bits
+int parity;    //0=even, 1=odd, 2=none
+int stopbit;   //4=1 bit, 8=2 bits
+
 void setup() {
   char a;
   char chsetting[BUFFSIZE];
@@ -80,6 +85,136 @@ void setup() {
       }
     }
     myFile.close();
+    //initialize serial port
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Using COM set:");
+    lcd.setCursor(0,1);
+    lcd.setBacklight(GREEN);
+    switch(databit+parity+stopbit){
+      case 22:
+        Serial.begin(baud,SERIAL_5N1);
+        lcd.print("5N1 - ");
+        lcd.print(baud);
+        break;
+      case 38:
+        Serial.begin(baud,SERIAL_6N1);
+        lcd.print("6N1 - ");
+        lcd.print(baud);
+        break;
+      case 70:
+        Serial.begin(baud,SERIAL_7N1);
+        lcd.print("7N1 - ");
+        lcd.print(baud);
+        break;
+      case 20:
+        Serial.begin(baud,SERIAL_5E1);
+        lcd.print("5E1 - ");
+        lcd.print(baud);
+        break;
+      case 36:
+        Serial.begin(baud,SERIAL_6E1);
+        lcd.print("6E1 - ");
+        lcd.print(baud);
+        break;
+      case 68:
+        Serial.begin(baud,SERIAL_7E1);
+        lcd.print("7E1 - ");
+        lcd.print(baud);
+        break;
+      case 132:
+        Serial.begin(baud,SERIAL_8E1);
+        lcd.print("8E1 - ");
+        lcd.print(baud);
+        break;
+      case 21:
+        Serial.begin(baud,SERIAL_5O1);
+        lcd.print("5O1 - ");
+        lcd.print(baud);
+        break;
+      case 37:
+        Serial.begin(baud,SERIAL_6O1);
+        lcd.print("6O1 - ");
+        lcd.print(baud);
+        break;
+      case 69:
+        Serial.begin(baud,SERIAL_7O1);
+        lcd.print("7O1 - ");
+        lcd.print(baud);
+        break;
+      case 133:
+        Serial.begin(baud,SERIAL_8O1);
+        lcd.print("8O1 - ");
+        lcd.print(baud);
+        break;
+      case 26:
+        Serial.begin(baud,SERIAL_5N2);
+        lcd.print("5N2 - ");
+        lcd.print(baud);
+        break;
+      case 42:
+        Serial.begin(baud,SERIAL_6N2);
+        lcd.print("6N2 - ");
+        lcd.print(baud);
+        break;
+      case 74:
+        Serial.begin(baud,SERIAL_7N2);
+        lcd.print("7N2 - ");
+        lcd.print(baud);
+        break;
+      case 138:
+        Serial.begin(baud,SERIAL_8N2);
+        lcd.print("8N2 - ");
+        lcd.print(baud);
+        break;
+      case 24:
+        Serial.begin(baud,SERIAL_5E2);
+        lcd.print("5E2 - ");
+        lcd.print(baud);
+        break;
+      case 40:
+        Serial.begin(baud,SERIAL_6E2);
+        lcd.print("6E2 - ");
+        lcd.print(baud);
+        break;
+      case 72:
+        Serial.begin(baud,SERIAL_7E2);
+        lcd.print("7E2 - ");
+        lcd.print(baud);
+        break;
+      case 136:
+        Serial.begin(baud,SERIAL_8E2);
+        lcd.print("8E2 - ");
+        lcd.print(baud);
+        break;
+      case 25:
+        Serial.begin(baud,SERIAL_5O2);
+        lcd.print("5O2 - ");
+        lcd.print(baud);
+        break;
+      case 41:
+        Serial.begin(baud,SERIAL_6O2);
+        lcd.print("6O2 - ");
+        lcd.print(baud);
+        break;
+      case 73:
+        Serial.begin(baud,SERIAL_7O2);
+        lcd.print("7O2 - ");
+        lcd.print(baud);
+        break;
+      case 137:
+        Serial.begin(baud,SERIAL_8O2);
+        lcd.print("8O2 - ");
+        lcd.print(baud);
+        break;
+      default:
+        //calculates to 134
+        Serial.begin(baud,SERIAL_8N1);
+        lcd.print("8N1 - ");
+        lcd.print(baud);
+        break;
+    }
+    delay(1000);
   }else{
     lcd.clear();
     lcd.setCursor(0,0);
@@ -87,7 +222,7 @@ void setup() {
     lcd.setCursor(0,1);
     lcd.print("found.");
     lcd.setBacklight(RED);
-    while(1);
+    while(1); //We die here.
   }
 }
 
@@ -96,21 +231,59 @@ void loop() {
 
 }
 
-void setparam(char setting[10], char value[10]){
+void setparam(char* setting, char* value){
   int a;
-  
-  switch(setting){
-    case "baud":
-      a=atoi(setting);
-      Serial.begin(a);
+  do{
+    if(setting=="baud"){
+      baud=atoi(value);
       break;
-    default:
-      lcd.clear();
-      lcd.setCursor(0,0);
-      lcd.print("Unknown setting:");
-      lcd.setCursor(0,1);
-      lcd.print(setting);
-      lcd.setBacklight(YELLOW);
-      delay(1000);
-  }
+    }
+    if(setting=="parity"){
+      if(value=="odd"){
+        parity=1;
+      }else{
+        if(value=="even"){
+          parity=0;
+        }else{
+          //Assume default 'none'
+          parity=2;
+        }
+      }
+      break;
+    }
+    if(setting=="stopbits"){
+      if(value=="2"){
+        stopbit=8;
+      }else{
+        //Assume default 1 stopbit
+        stopbit=4;
+      }
+      break;
+    }
+    if(setting=="databits"){
+      if(value=="5"){
+        databit=16;
+        break;
+      }
+      if(value=="6"){
+        databit=32;
+        break;
+      }
+      if(value=="7"){
+        databit=64;
+        break;
+      }
+      //Assuming databit setting of 8.
+      databit=128;
+      break;
+    }
+    //Unknown setting found in config file.
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Unknown setting:");
+    lcd.setCursor(0,1);
+    lcd.print(setting);
+    lcd.setBacklight(YELLOW);
+    delay(1000);
+  }while(1==2);  //only run loop once
 }

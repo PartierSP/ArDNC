@@ -74,7 +74,7 @@ void setup() {
   lcd.begin(16, 2);
   
   lcd.clear();
-  lcd.print("Initializing... ");
+  lcd.print(F("Initializing... "));
   lcd.setBacklight(WHITE);
   delay(2000); // Gives time to read the screen.
   
@@ -83,9 +83,9 @@ void setup() {
   
   if (!SD.begin(10)) {
     lcd.clear();
-    lcd.print("SD Card init ");
+    lcd.print(F("SD Card init "));
     lcd.setCursor(0, 1);
-    lcd.print("FAILED");
+    lcd.print(F("FAILED"));
     lcd.setBacklight(RED);
     return;
   }
@@ -107,7 +107,7 @@ void choosefile() {
   File root;
   
   lcd.clear();
-  lcd.print("Select File:");
+  lcd.print(F("Select File:"));
   lcd.setBacklight(WHITE);
   
   root = SD.open(cfgdir);
@@ -119,9 +119,9 @@ void choosefile() {
       if(index==0){
         //Directory is empty
         lcd.clear();
-        lcd.print("ERROR. Dir not");
+        lcd.print(F("ERROR. Dir not"));
         lcd.setCursor(0, 1);
-        lcd.print("found or empty.");
+        lcd.print(F("found or empty."));
         lcd.setBacklight(RED);
         while(true){
         }
@@ -133,7 +133,7 @@ void choosefile() {
     }
     lcd.setCursor(0, 1);
     lcd.print(entry.name());
-    lcd.print("                "); //cleans rest of the line
+    lcd.print(F("                ")); //cleans rest of the line
 
     //////////////////////////////////////////////////////////
     //               Available Memory Checker               //
@@ -156,9 +156,9 @@ void choosefile() {
             sendfile();
             
             lcd.clear();
-            lcd.print("Select to resend");
+            lcd.print(F("Select to resend"));
             lcd.setCursor(0, 1);
-            lcd.print("Back = file menu");
+            lcd.print(F("Back = file menu"));
             lcd.setBacklight(WHITE);
             
             while(true){
@@ -277,18 +277,18 @@ void readcfg()
     cfg.close();
 
       lcd.clear();
-      lcd.print("Init done.");
+      lcd.print(F("Init done."));
       lcd.setCursor(0,1);
-      lcd.print("Using ");
+      lcd.print(F("Using "));
       lcd.print(cfgname);
       lcd.setBacklight(WHITE);
       delay(2000);
     
   } else { //Read error occured (couldn't find file).
       lcd.clear();
-      lcd.print("ERROR");
+      lcd.print(F("ERROR"));
       lcd.setCursor(0,1);
-      lcd.print("Config not found");
+      lcd.print(F("Config not found"));
       lcd.setBacklight(RED);
       
       // Error stop execution.
@@ -309,7 +309,7 @@ void sendfile()
   char fullname[47]="";
 
   lcd.clear();
-  lcd.print("Sending...");
+  lcd.print(F("Sending..."));
   lcd.setBacklight(GREEN);
       
   
@@ -408,7 +408,7 @@ void sendfile()
         fpos++;
         lcd.setCursor(0,1);
         lcd.print(fpos);
-        lcd.print("k of ");
+        lcd.print(F("k of "));
         lcd.print(fsize);
         lcd.print("k");
         i=0;
@@ -424,9 +424,9 @@ void sendfile()
     fsize = dataFile.size();
     
     lcd.clear();
-    lcd.print("ERROR");
+    lcd.print(F("ERROR"));
     lcd.setCursor(0, 1);
-    lcd.print("File Open Error.");
+    lcd.print(F("File Open Error."));
     lcd.setBacklight(RED);
     while(true){
     }
